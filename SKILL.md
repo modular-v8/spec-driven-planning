@@ -7,7 +7,7 @@ description: Turns a rough project idea into spec.md, plan.md, and tasks.md file
 
 ## Why this exists
 
-One-shot prompting a coding agent on anything beyond a trivial task tends to
+Single-shot prompting a coding agent on anything beyond a trivial task tends to
 produce sprawling, inconsistent output — the agent is inferring scope,
 architecture, and "done" as it goes, with no chance for the human to correct
 course until the code already exists. Producing `spec.md` (what/why),
