@@ -1,0 +1,23 @@
+{
+  "skill_name": "spec-driven-planning",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to create a landing page for an Automotive parts dealer, which shows some informatino about the company and all of its products. Can you help me plan this before building it?",
+      "expected_output": "The skill infers this is a Simple-tier project (a single marketing page, no backend/auth/data-persistence concerns), runs a short conversational elicitation (4-7 questions per questions/simple.md), then produces a spec.md at the user's project location following templates/spec.template.md's Simple-tier sections (outcome, in scope, out of scope, constraints, requirements in SHALL/WHEN/IF form, acceptance criteria), gets it confirmed, then produces a flat tasks.md. No plan.md should be generated at this tier.",
+      "files": [],
+      "expectations": [
+        "The skill selects the Simple tier for this project (not Medium or Complex), per tiers.md's criteria for a single marketing page with no backend/auth/data-persistence concerns",
+        "No plan.md is generated — Simple tier skips it entirely per tiers.md",
+        "spec.md includes exactly the Simple-tagged sections from spec.template.md: outcome, in scope, out of scope, constraints, prior decisions (if applicable), requirements, acceptance criteria — and omits medium+/complex-only sections (users & context, data & integrations, risks & open questions)",
+        "spec.md's requirements section uses EARS-style syntax: 'The system SHALL...' for always-active, 'WHEN..., the system SHALL...' for event-driven, 'IF..., the system SHALL...' for unwanted behavior",
+        "No section in spec.md is left with unfilled {{placeholder}} text",
+        "tasks.md is a flat checklist with no phase headers (phases are Complex-tier only)",
+        "Each task in tasks.md has an Acceptance line and does not need a plan.md Refs citation (since no plan.md exists at this tier)",
+        "The elicitation transcript shows roughly 4-7 distinct questions asked, not a much longer list",
+        "The transcript shows at least one explicit checkpoint (e.g. 'does this spec look right?') before tasks.md is generated",
+        "spec.md and tasks.md are written to the user's project directory, not into the skill's own folder"
+      ]
+    }
+  ]
+}
