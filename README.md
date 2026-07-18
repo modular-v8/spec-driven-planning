@@ -8,12 +8,46 @@ for Cursor, Codex, and any other agent.
 
 ## Why
 
-One-shot prompting a coding agent on anything beyond a trivial task tends to produce sprawling,
+Single-shot prompting a coding agent on anything beyond a trivial task tends to produce sprawling,
 inconsistent output: the agent infers scope, architecture, and "done" as it goes, with no chance
 for a human to correct course until the code already exists. This skill runs a short, conversational
 elicitation up front and produces reviewed blueprints instead — so the coding agent (Claude Code,
 Cursor, or anything else you hand the files to) starts from a human-confirmed plan rather than a
 single freeform prompt.
+
+## What this skill does
+
+It creates `spec.md` (and `plan.md` / `tasks.md`, depending on complexity) in your project, based on
+a short question-and-answer conversation about what you're building.
+
+## What this skill does NOT do
+
+It does not write or execute any code. Producing the planning documents is the entire job — once
+they're confirmed, this skill's involvement ends. You still need to hand those files to a coding
+agent yourself, with a structured prompt that tells it to read them before it starts implementing.
+
+### Handing off to your coding agent
+
+Once `spec.md` (and `plan.md` / `tasks.md`, if generated) are ready, start your coding agent session
+with a prompt like this — adjust the conditional lines depending on which files your tier actually
+produced:
+
+```
+Before writing any code, do the following:
+
+1. Read spec.md to understand the project.
+2. If plan.md exists, read it next to understand the overall architecture and approach.
+3. If tasks.md exists, read it and note the specific tasks you'll need to complete.
+
+Then summarize your understanding of the project in a few sentences and ask me to confirm it's
+correct before you start implementation.
+```
+
+This forces the same "confirm before building" discipline on the build side that spec-driven-planning
+enforces on the planning side — the coding agent states its understanding back to you before writing
+a single line, so a misread spec gets caught immediately instead of three files deep into the
+implementation.
+
 
 ## How it works
 
@@ -106,6 +140,33 @@ moved around between releases. Clone this repo, then either:
   same folder so Codex can read them by relative path as the flow calls for them.
 
 **Invoke it** with the resulting slash command, e.g. `/spec-driven-planning`.
+
+### GitHub Copilot
+
+Copilot Chat (in VS Code) supports reusable **prompt files** — markdown files under
+`.github/prompts/` invoked with a `/` slash command, which is the right fit here since it stays
+explicit-invocation rather than always-on. (Copilot also has `.github/copilot-instructions.md` for
+repo-wide instructions, but those apply to every chat request automatically — skip that route for
+this skill, since it's designed not to fire until you ask for it by name.)
+
+Clone this repo, then copy the whole folder into `.github/prompts/spec-driven-planning/`, and add a
+thin entry prompt at `.github/prompts/spec-driven-planning.prompt.md`:
+
+```markdown
+---
+mode: agent
+description: Spec-driven planning — turns a rough project idea into reviewed spec.md/plan.md/tasks.md before any code is written.
+---
+Read `.github/prompts/spec-driven-planning/SKILL.md` and follow it exactly, starting from "The flow."
+Read `tiers.md` and the relevant `questions/*.md` / `templates/*.md` files in that same folder as
+each step calls for them.
+```
+
+Prompt files are a fairly recent VS Code feature and their exact frontmatter/location has shifted
+between releases, so check
+[GitHub's Copilot customization docs](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions)
+if what's above doesn't match your version. **Invoke it** by typing `/spec-driven-planning` in
+Copilot Chat.
 
 ### Any other agent
 
