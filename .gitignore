@@ -1,5 +1,6 @@
 # Local Claude Code settings (machine-specific permissions, not shared)
-.claude/settings.local.json
+.claude/
+.serena/
 
 # OS cruft
 .DS_Store
